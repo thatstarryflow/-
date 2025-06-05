@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="mdui.css">
+    <title>资本做局器</title>
+</head>
+<style>
+    body{
+        width: 100vw;
+        height: 100vh;
+        background-color: antiquewhite;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+    }
+    .content{
+        width: 300px;
+        height: 150px;
+        display: flex;
+        flex-direction: column;
+        margin: auto;
+    }
+    .title{
+        margin: auto;
+    }
+    .startBtn{
+        margin: 0 auto auto;
+        width: 75%;
+    }
+    footer{
+        text-align: center;
+        font-size: 12px;
+        margin-bottom: 5px;
+    }
+</style>
+<body>
+    <mdui-card class="content" variant="elevated" clickable="false">
+    <h2 class="title">资本做局器</h2>
+    <mdui-button class="startBtn" variant="tonal">开始做局</mdui-button>
+    <mdui-linear-progress value="30" max="100"></mdui-linear-progress>
+    </mdui-card>
+    <footer>Copyright &copy; XiaoWei</footer>
+</body>
+<script src="mdui.global.js"></script>
+<script>
+
+    const randMAX = 10;
+    const randMIN = 5;
+
+    document.querySelector(".startBtn").addEventListener("click",(event)=>{
+
+        const btn = event.target;
+
+        btn.setAttribute("disabled","true");
+        btn.setAttribute("loading","true");
+        btn.textContent = "正在做局...";
+
+        const time = (Math.floor(Math.random() * (randMAX - randMIN + 1)) + randMIN)*1000;
+        
+        setTimeout(()=>{
+
+            localStorage.setItem("time",Number(localStorage.getItem("time"))+time);
+            localStorage.setItem("count",Number(localStorage.getItem("count"))+1);
+
+            mdui.dialog({
+                
+              headline: `你已被做局，资本浪费了你${time/1000}秒钟`,
+              description: `你已被做局${localStorage.getItem("count")}次，共浪费${Number(localStorage.getItem("time"))/1000}秒`,
+            // body:` <h2>你已被做局，资本浪费了你${time/1000}秒</h2>
+            //         <p>你已被做局${localStorage.getItem("count")}次，共浪费${Number(localStorage.getItem("time"))/1000}秒</p>
+            // `,
+            actions: [{
+                text: "忍气吞声",
+                onClick: () => {
+                    return true;
+                },
+             }],
+             onClose:()=>{
+                btn.setAttribute("disabled","false");
+                btn.setAttribute("loading","false");
+                btn.textContent = "开始做局";
+            }
+            });
+        },time);
+               
+    });
+</script>
+</html>
